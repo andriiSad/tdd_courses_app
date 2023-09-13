@@ -79,5 +79,18 @@ dev_dependencies:
   # Linting for Flutter projects
   flutter_lints: ^2.0.0
 
+  # Testing utilities for BLoC
+  bloc_test: ^9.1.4
+
+  # Mocking library for testing
+  mocktail: ^1.0.0
+
+  # Static analysis tool for Dart & Flutter
+  very_good_analysis: ^5.1.0
+
 flutter:
   uses-material-design: true
+
+
+  assets:
+    - assets/lottie/
