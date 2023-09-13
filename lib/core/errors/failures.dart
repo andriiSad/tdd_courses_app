@@ -5,10 +5,13 @@ abstract class Failure extends Equatable {
   const Failure({
     required this.message,
     required this.statusCode,
-  });
+  }) : assert(
+          statusCode is String || statusCode is int,
+          'statusCode must be a String or int, not: $statusCode',
+        );
 
   final String message;
-  final int statusCode;
+  final dynamic statusCode;
 
   String get errorMessage => '$statusCode Error: $message';
 
@@ -29,7 +32,9 @@ class ServerFailure extends Failure {
     required super.statusCode,
   });
 
-  factory ServerFailure.fromException(ServerException exception) =>
+  factory ServerFailure.fromException(
+    ServerException exception,
+  ) =>
       ServerFailure(
         message: exception.message,
         statusCode: exception.statusCode,
