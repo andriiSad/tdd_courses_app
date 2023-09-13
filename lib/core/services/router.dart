@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:tdd_courses_app/core/common/views/page_under_construction.dart';
-import 'package:tdd_courses_app/src/on_boarding/presentation/on_boarding_screen.dart';
 
 Route<dynamic> generateRoute(RouteSettings settings) {
   switch (settings.name) {
-    case OnBoardingScreen.routeName:
-      return _pageBuilder(
-        (_) => const OnBoardingScreen(),
-        settings: settings,
-      );
+    // case OnBoardingScreen.routeName:
+    //   return _pageBuilder(
+    //     (_) => const OnBoardingScreen(),
+    //     settings: settings,
+    //   );
     default:
       return _pageBuilder(
         (_) => const PageUnderConstruction(),
