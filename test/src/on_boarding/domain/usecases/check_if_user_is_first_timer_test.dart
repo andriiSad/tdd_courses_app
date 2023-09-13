@@ -4,7 +4,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:tdd_courses_app/src/on_boarding/domain/repos/on_boarding_repo.dart';
 import 'package:tdd_courses_app/src/on_boarding/domain/usecases/check_if_user_is_first_timer.dart';
 
-import 'on_boarding_repo_mock.dart';
+import 'on_boarding_repo.mock.dart';
 
 void main() {
   late IOnBoardingRepo repo;
