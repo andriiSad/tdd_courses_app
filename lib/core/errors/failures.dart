@@ -22,8 +22,16 @@ abstract class Failure extends Equatable {
 class CacheFailure extends Failure {
   const CacheFailure({
     required super.message,
-    required super.statusCode,
+    super.statusCode = 500,
   });
+
+  factory CacheFailure.fromException(
+    CacheException exception,
+  ) =>
+      CacheFailure(
+        message: exception.message,
+        statusCode: exception.statusCode,
+      );
 }
 
 class ServerFailure extends Failure {

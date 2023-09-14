@@ -12,7 +12,8 @@ class PageUnderConstruction extends StatelessWidget {
       body: Container(
         constraints: const BoxConstraints.expand(),
         decoration: const BoxDecoration(
-          //TODO: when assets will be found, replace this with onBoardingBackground image
+          //TODO: when assets will be found
+          //replace with onBoardingBackground image
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
@@ -21,7 +22,7 @@ class PageUnderConstruction extends StatelessWidget {
         ),
         child: SafeArea(
           child: Center(
-            child: Lottie.asset(MediaRes.pageUnderConstruction),
+            child: Lottie.asset(MediaRes.pageUnderConstructionLottie),
           ),
         ),
       ),

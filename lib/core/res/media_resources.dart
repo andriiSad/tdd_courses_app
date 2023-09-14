@@ -6,6 +6,10 @@ class MediaRes {
   static const _baseLottie = 'assets/lottie';
   static const _baseVector = 'assets/vectors';
 
-  static const pageUnderConstruction =
+  static const pageUnderConstructionLottie =
       '$_baseLottie/page_under_construction.json';
+
+  static const casualReadLottie = '$_baseLottie/casual_read.json';
+  static const casualReadSitLottie = '$_baseLottie/casual_read_sit.json';
+  static const casualMeditationLottie = '$_baseLottie/casual_meditation.json';
 }

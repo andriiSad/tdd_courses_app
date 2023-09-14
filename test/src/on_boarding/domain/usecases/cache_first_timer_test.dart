@@ -50,6 +50,7 @@ void main() {
         message: 'Unkown error occurred',
         statusCode: 505,
       );
+
       // arrange
       when(
         () => repo.cacheFirstTimer(),
@@ -58,11 +59,12 @@ void main() {
           tFailure,
         ),
       );
+
       // act
       final result = await usecase();
 
       // assert
-      expect(result, const Left<Failure, void>(tFailure));
+      expect(result, const Left<Failure, dynamic>(tFailure));
 
       verify(() => repo.cacheFirstTimer()).called(1);
 
