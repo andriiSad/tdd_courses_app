@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:tdd_courses_app/core/res/colors.dart';
+import 'package:tdd_courses_app/core/res/fonts.dart';
+import 'package:tdd_courses_app/core/services/injection_container.dart';
 import 'package:tdd_courses_app/core/services/router.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  //init service locator
+  await init();
   runApp(
     MaterialApp(
       title: 'Education App',
       theme: ThemeData(
-        // fontFamily: Fonts.poppins,
+        fontFamily: Fonts.poppins,
         appBarTheme: const AppBarTheme(
           color: Colors.transparent,
           elevation: 0,

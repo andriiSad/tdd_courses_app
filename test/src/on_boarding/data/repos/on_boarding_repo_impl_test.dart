@@ -96,6 +96,26 @@ void main() {
       },
     );
     test(
+      'should call the [RemoteDataSource.checkIfUserIsFirstTimer] and complete '
+      'successfully, when the call to local source is successful',
+      () async {
+        //arrange
+        when(() => localDataSource.checkIfUserIsFirstTimer())
+            .thenAnswer((_) async => Future.value(false));
+        //.thenAnswer((_) async => Future.value()); is also OK for void.
+
+        //act
+        final result = await repo.checkIfUserIsFirstTimer();
+
+        //assert
+        expect(result, const Right<dynamic, bool>(false));
+
+        verify(() => localDataSource.checkIfUserIsFirstTimer()).called(1);
+
+        verifyNoMoreInteractions(localDataSource);
+      },
+    );
+    test(
       'should return a [CacheFailure] '
       'when the call to local source is unsuccessful',
       () async {

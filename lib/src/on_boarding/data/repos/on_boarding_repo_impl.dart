@@ -17,10 +17,10 @@ class OnBoardingRepoImpl implements IOnBoardingRepo {
     try {
       //we should await here!!!
       await _localDataSource.cacheFirstTimer();
+      return const Right(null);
     } on CacheException catch (e) {
       return Left<Failure, dynamic>(CacheFailure.fromException(e));
     }
-    return const Right(null);
   }
 
   @override

@@ -22,7 +22,7 @@ class PageContent extends Equatable {
           description: 'This is the first online educational platform '
               " designed by the world's top professors",
         );
-  const PageContent.thirds()
+  const PageContent.third()
       : this(
           lottie: MediaRes.casualMeditationLottie,
           title: 'Easy to join the lesson',

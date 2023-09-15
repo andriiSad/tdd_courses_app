@@ -13,11 +13,14 @@ class MockCheckIfUserIsFirstTimer extends Mock
     implements CheckIfUserIsFirstTimer {}
 
 void main() {
-  late final CacheFirstTimer cacheFirstTimerMock;
-  late final CheckIfUserIsFirstTimer checkIfUserIsFirstTimerMock;
-  late final OnBoardingCubit cubit;
+  late CacheFirstTimer cacheFirstTimerMock;
+  late CheckIfUserIsFirstTimer checkIfUserIsFirstTimerMock;
+  late OnBoardingCubit cubit;
 
-  const tErrorMessage = 'Setting a bool failed';
+  const tFailure = CacheFailure(
+    message: 'Insufficient permissions',
+    statusCode: 4032,
+  );
 
   setUp(() {
     cacheFirstTimerMock = MockCacheFirstTimer();
@@ -29,7 +32,9 @@ void main() {
   });
 
   //ALWAYS CLOSE BLOC/CUBIT AFTER EACH TEST
-  tearDown(() => cubit.close());
+  tearDown(() {
+    cubit.close();
+  });
 
   test(
     'initial state should be [OnBoardingInitial]',
@@ -46,74 +51,79 @@ void main() {
         return cubit;
       },
       act: (cubit) => cubit.cacheFirstTimer(),
-      expect: () => const <OnBoardingState>[
+      expect: () => const [
         CachingFirstTimer(),
         UserCached(),
       ],
+      verify: (_) {
+        verify(() => cacheFirstTimerMock()).called(1);
+        verifyNoMoreInteractions(cacheFirstTimerMock);
+      },
     );
     blocTest<OnBoardingCubit, OnBoardingState>(
       'should emit [CachingFirstTimer, OnBoardingError] '
       'when cacheFirstTimer unsuccessfull',
       build: () {
         when(() => cacheFirstTimerMock()).thenAnswer(
-          (_) async => const Left(CacheFailure(message: tErrorMessage)),
+          (_) async => const Left(tFailure),
         );
         return cubit;
       },
       act: (cubit) => cubit.cacheFirstTimer(),
-      expect: () => const <OnBoardingState>[
-        CachingFirstTimer(),
-        OnBoardingError(message: tErrorMessage),
+      expect: () => <OnBoardingState>[
+        const CachingFirstTimer(),
+        OnBoardingError(message: tFailure.errorMessage),
       ],
     );
   });
-  // group('checkIfUserIsFirstTimer', () {
-  //   blocTest<OnBoardingCubit, OnBoardingState>(
-  //     'should emit [CheckingIfUserIsFirstTimer, OnBoardingStatus] '
-  //     'with isFirstTimer true when user is a first timer',
-  //     build: () {
-  //       when(() => checkIfUserIsFirstTimerMock.call())
-  //           .thenAnswer((_) async => const Right(true));
-  //       return cubit;
-  //     },
-  //     act: (cubit) => cubit.checkIfUserIsFirstTimer(),
-  //     expect: () => <OnBoardingState>[
-  //       const CheckingIfUserIsFirstTimer(),
-  //       const OnBoardingStatus(isFirstTimer: true),
-  //     ],
-  //   );
 
-  //   blocTest<OnBoardingCubit, OnBoardingState>(
-  //     'should emit [CheckingIfUserIsFirstTimer, OnBoardingStatus] '
-  //     'with isFirstTimer false when user is not a first timer',
-  //     build: () {
-  //       when(() => checkIfUserIsFirstTimerMock())
-  //           .thenAnswer((_) async => const Right(false));
-  //       return cubit;
-  //     },
-  //     act: (cubit) => cubit.checkIfUserIsFirstTimer(),
-  //     expect: () => <OnBoardingState>[
-  //       const CheckingIfUserIsFirstTimer(),
-  //       const OnBoardingStatus(isFirstTimer: false),
-  //     ],
-  //   );
+  group('checkIfUserIsFirstTimer', () {
+    blocTest<OnBoardingCubit, OnBoardingState>(
+      'should emit [CheckingIfUserIsFirstTimer, OnBoardingStatus(true)] '
+      'with isFirstTimer true when user is a first timer',
+      build: () {
+        when(() => checkIfUserIsFirstTimerMock())
+            .thenAnswer((_) async => const Right(true));
+        return cubit;
+      },
+      act: (cubit) => cubit.checkIfUserIsFirstTimer(),
+      expect: () => <OnBoardingState>[
+        const CheckingIfUserIsFirstTimer(),
+        const OnBoardingStatus(isFirstTimer: true),
+      ],
+    );
 
-  //   blocTest<OnBoardingCubit, OnBoardingState>(
-  //     'should emit [CheckingIfUserIsFirstTimer, OnBoardingError] '
-  //     'when an error occurs during user status check',
-  //     build: () {
-  //       when(() => checkIfUserIsFirstTimerMock()).thenAnswer(
-  //         (_) async => const Left(
-  //           CacheFailure(message: 'Some error message'),
-  //         ),
-  //       );
-  //       return cubit;
-  //     },
-  //     act: (cubit) => cubit.checkIfUserIsFirstTimer(),
-  //     expect: () => <OnBoardingState>[
-  //       const CheckingIfUserIsFirstTimer(),
-  //       const OnBoardingError(message: 'Some error message'),
-  //     ],
-  //   );
-  // });
+    blocTest<OnBoardingCubit, OnBoardingState>(
+      'should emit [CheckingIfUserIsFirstTimer, OnBoardingStatus(false)] '
+      'with isFirstTimer false when user is not a first timer',
+      build: () {
+        when(() => checkIfUserIsFirstTimerMock())
+            .thenAnswer((_) async => const Right(false));
+        return cubit;
+      },
+      act: (cubit) => cubit.checkIfUserIsFirstTimer(),
+      expect: () => <OnBoardingState>[
+        const CheckingIfUserIsFirstTimer(),
+        const OnBoardingStatus(isFirstTimer: false),
+      ],
+    );
+
+    blocTest<OnBoardingCubit, OnBoardingState>(
+      'should emit [CheckingIfUserIsFirstTimer, OnBoardingStatus(true)] '
+      'when an error occurs during user status check',
+      build: () {
+        when(() => checkIfUserIsFirstTimerMock()).thenAnswer(
+          (_) async => const Left(
+            tFailure,
+          ),
+        );
+        return cubit;
+      },
+      act: (cubit) => cubit.checkIfUserIsFirstTimer(),
+      expect: () => <OnBoardingState>[
+        const CheckingIfUserIsFirstTimer(),
+        const OnBoardingStatus(isFirstTimer: true),
+      ],
+    );
+  });
 }
