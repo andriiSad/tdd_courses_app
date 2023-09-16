@@ -19,7 +19,7 @@ class LocalUser extends Equatable {
           uid: '_empty.uid',
           email: '_empty.email',
           points: 0,
-          fullName: 'empty.fullName',
+          fullName: '_empty.fullName',
         );
 
   final String uid;

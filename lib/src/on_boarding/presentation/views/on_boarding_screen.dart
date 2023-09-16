@@ -38,12 +38,6 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
   }
 
   @override
-  void didChangeDependencies() {
-    // TODO: implement didChangeDependencies
-    super.didChangeDependencies();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colours.whiteColour,

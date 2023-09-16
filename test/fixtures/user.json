@@ -2,7 +2,7 @@
     "uid": "_empty.uid",
     "email": "_empty.email",
     "points": 0,
-    "fullName": "empty.fullName",
+    "fullName": "_empty.fullName",
     "groupIds": [],
     "enrolledCoursesId": [],
     "following": [],

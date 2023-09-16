@@ -2,8 +2,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tdd_courses_app/core/errors/exceptions.dart';
 
 abstract class IOnBoardingLocalDataSource {
-  const IOnBoardingLocalDataSource();
-
   //no Either return types, datasources throws an error
   Future<void> cacheFirstTimer();
   Future<bool> checkIfUserIsFirstTimer();

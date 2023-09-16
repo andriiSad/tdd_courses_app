@@ -3,8 +3,6 @@ import 'package:tdd_courses_app/core/utils/typedefs.dart';
 import 'package:tdd_courses_app/src/auth/domain/entities/user.dart';
 
 abstract class IAuthRepo {
-  const IAuthRepo();
-
   ResultFuture<LocalUser> signIn({
     required String email,
     required String password,
@@ -21,8 +19,8 @@ abstract class IAuthRepo {
   });
 
   ResultVoid updateUser({
-    dynamic userData,
-    UpdateUserAction action,
+    required dynamic userData,
+    required UpdateUserAction action,
   });
 
   ResultVoid signOut();
