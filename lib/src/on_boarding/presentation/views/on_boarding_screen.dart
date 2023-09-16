@@ -50,7 +50,6 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
       body: GradientBackground(
         child: BlocConsumer<OnBoardingCubit, OnBoardingState>(
           listener: (context, state) {
-            print(state);
             // TODO(User Cached Handler): Push to appropriate screens
             if (state is OnBoardingStatus && !state.isFirstTimer) {
               Navigator.pushReplacementNamed(context, '/home');
