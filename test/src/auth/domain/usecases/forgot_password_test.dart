@@ -10,12 +10,12 @@ void main() {
   late IAuthRepo repository;
   late ForgotPassword usecase;
 
+  const params = ForgotPasswordParams.empty();
+
   setUp(() {
     repository = MockAuthRepo();
     usecase = ForgotPassword(repository);
   });
-
-  const params = ForgotPasswordParams.empty();
 
   test(
     'should call the [AuthRepo.forgotPassword]',
@@ -32,6 +32,7 @@ void main() {
 
       // assert
       expect(result, const Right<dynamic, void>(null));
+
       verify(
         () => repository.forgotPassword(
           email: params.email,

@@ -10,12 +10,12 @@ void main() {
   late IAuthRepo repository;
   late SignUp usecase;
 
+  const params = SignUpParams.empty();
+
   setUp(() {
     repository = MockAuthRepo();
     usecase = SignUp(repository);
   });
-
-  const params = SignUpParams.empty();
 
   test(
     'should call the [AuthRepo.signUp]',
@@ -34,6 +34,7 @@ void main() {
 
       // assert
       expect(result, const Right<dynamic, void>(null));
+
       verify(
         () => repository.signUp(
           email: params.email,

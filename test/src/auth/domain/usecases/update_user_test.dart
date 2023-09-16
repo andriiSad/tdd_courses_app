@@ -11,6 +11,7 @@ void main() {
   late UpdateUser usecase;
 
   const params = UpdateUserParams.empty();
+
   setUp(() {
     repository = MockAuthRepo();
     usecase = UpdateUser(repository);
@@ -34,6 +35,7 @@ void main() {
 
       // assert
       expect(result, const Right<dynamic, void>(null));
+
       verify(
         () => repository.updateUser(
           userData: params.userData,

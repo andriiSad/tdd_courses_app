@@ -12,13 +12,12 @@ void main() {
   late SignIn usecase;
 
   const tUser = LocalUser.empty();
+  const params = SignInParams.empty();
 
   setUp(() {
     repository = MockAuthRepo();
     usecase = SignIn(repository);
   });
-
-  const params = SignInParams.empty();
 
   test(
     'should call the [AuthRepo.signIn] '
@@ -37,6 +36,7 @@ void main() {
 
       // assert
       expect(result, const Right<dynamic, LocalUser>(tUser));
+
       verify(
         () => repository.signIn(
           email: params.email,

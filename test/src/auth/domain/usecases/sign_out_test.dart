@@ -28,6 +28,7 @@ void main() {
 
       // assert
       expect(result, const Right<dynamic, void>(null));
+
       verify(
         () => repository.signOut(),
       ).called(1);
