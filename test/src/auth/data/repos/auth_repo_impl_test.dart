@@ -27,7 +27,7 @@ void main() {
     const tUserModel = LocalUserModel.empty();
     const tException = ServerException(
       message: 'Unknown error occurred',
-      statusCode: 500,
+      statusCode: '500',
     );
     test(
       'should call the [RemoteDataSource.signIn] and return '
@@ -104,7 +104,7 @@ void main() {
     const params = SignUpParams.empty();
     const tException = ServerException(
       message: 'Unknown error occurred',
-      statusCode: 500,
+      statusCode: '500',
     );
     test(
       'should call the [RemoteDataSource.signUp] and complete '
@@ -187,7 +187,7 @@ void main() {
     const params = ForgotPasswordParams.empty();
     const tException = ServerException(
       message: 'Unknown error occurred',
-      statusCode: 500,
+      statusCode: '500',
     );
     test(
       'should call the [RemoteDataSource.forgotPassword] and complete '
@@ -258,7 +258,7 @@ void main() {
     const params = UpdateUserParams.empty();
     const tException = ServerException(
       message: 'Unknown error occurred',
-      statusCode: 500,
+      statusCode: '500',
     );
 
     setUp(() {
@@ -340,7 +340,7 @@ void main() {
   group('signOut', () {
     const tException = ServerException(
       message: 'Unknown error occurred',
-      statusCode: 500,
+      statusCode: '500',
     );
     test(
       'should call the [RemoteDataSource.forgotPassword] and complete '

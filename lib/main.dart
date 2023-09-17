@@ -1,13 +1,22 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:tdd_courses_app/core/res/colors.dart';
 import 'package:tdd_courses_app/core/res/fonts.dart';
 import 'package:tdd_courses_app/core/services/injection_container.dart';
 import 'package:tdd_courses_app/core/services/router.dart';
+import 'package:tdd_courses_app/firebase_options.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  //init firebase
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
   //init service locator
   await init();
+
   runApp(
     MaterialApp(
       title: 'Education App',

@@ -46,9 +46,9 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
           listener: (context, state) {
             // TODO(User Cached Handler): Push to appropriate screens
             if (state is OnBoardingStatus && !state.isFirstTimer) {
-              Navigator.pushReplacementNamed(context, '/home');
+              // Navigator.pushReplacementNamed(context, '/home');
             } else if (state is UserCached) {
-              Navigator.pushReplacementNamed(context, '/sign_in');
+              // Navigator.pushReplacementNamed(context, '/sign_in');
             }
           },
           builder: (context, state) {
