@@ -28,7 +28,7 @@ class UpdateUserParams extends Equatable {
   const UpdateUserParams.empty()
       : this(
           userData: '_empty.userData',
-          action: UpdateUserAction.empty,
+          action: UpdateUserAction.displayName,
         );
 
   final dynamic userData;

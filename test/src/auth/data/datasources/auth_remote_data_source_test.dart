@@ -5,6 +5,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:firebase_storage_mocks/firebase_storage_mocks.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:tdd_courses_app/core/enums/update_user.dart';
 import 'package:tdd_courses_app/core/errors/exceptions.dart';
 import 'package:tdd_courses_app/core/utils/constants.dart';
 import 'package:tdd_courses_app/core/utils/typedefs.dart';
@@ -80,8 +81,7 @@ void main() {
   const tEmail = '_test.email';
   final tFirebaseAuthException = FirebaseAuthException(
     code: 'user_not_found',
-    message:
-        'There is no user record, corresponding to the provided identifier.',
+    message: 'There is no user record, corresponding to the provided ID.',
   );
 
   group('forgotPassword', () {
@@ -301,10 +301,16 @@ void main() {
         await untilCalled(() => userCredential.user!.updateDisplayName(any()));
         await untilCalled(() => userCredential.user!.updatePhotoURL(any()));
 
-        verify(() => userCredential.user!.updateDisplayName(tFullName))
-            .called(1);
-        verify(() => userCredential.user!.updatePhotoURL(kDefaultAvatar))
-            .called(1);
+        verify(
+          () => userCredential.user!.updateDisplayName(
+            tFullName,
+          ),
+        ).called(1);
+        verify(
+          () => userCredential.user!.updatePhotoURL(
+            kDefaultAvatar,
+          ),
+        ).called(1);
 
         verifyNoMoreInteractions(authClient);
       },
@@ -347,6 +353,137 @@ void main() {
         ).called(1);
 
         verifyNoMoreInteractions(authClient);
+      },
+    );
+  });
+
+  group('updateUser', () {
+    // setUp(
+    //   () async => {
+    //     when(() => authClient.currentUser).thenReturn(mockUser),
+    //   },
+    // );
+    test(
+      'should update user email successfully '
+      'when no exception is thrown',
+      () async {
+        // arrange
+        when(() => mockUser.updateEmail(any())).thenAnswer(
+          (_) async => Future.value(),
+        );
+
+        // act
+        await dataSource.updateUser(
+          userData: tEmail,
+          action: UpdateUserAction.email,
+        );
+
+        // assert
+        verify(
+          () => mockUser.updateEmail(
+            tEmail,
+          ),
+        ).called(1);
+
+        verifyNever(
+          () => mockUser.updatePhotoURL(any()),
+        );
+        verifyNever(
+          () => mockUser.updateDisplayName(any()),
+        );
+        verifyNever(
+          () => mockUser.updatePassword(any()),
+        );
+
+        final user = await cloudStoreClient
+            .collection('users')
+            .doc(
+              mockUser.uid,
+            )
+            .get();
+
+        expect(user.data()!['email'], tEmail);
+      },
+    );
+    test(
+      'should update user displayName successfully '
+      'when no exception is thrown',
+      () async {
+        // arrange
+        when(() => mockUser.updateDisplayName(any())).thenAnswer(
+          (_) async => Future.value(),
+        );
+
+        // act
+        await dataSource.updateUser(
+          userData: tFullName,
+          action: UpdateUserAction.displayName,
+        );
+
+        // assert
+        verify(
+          () => mockUser.updateDisplayName(
+            tFullName,
+          ),
+        ).called(1);
+
+        verifyNever(
+          () => mockUser.updatePhotoURL(any()),
+        );
+        verifyNever(
+          () => mockUser.updateEmail(any()),
+        );
+        verifyNever(
+          () => mockUser.updatePassword(any()),
+        );
+
+        final user = await cloudStoreClient
+            .collection('users')
+            .doc(
+              mockUser.uid,
+            )
+            .get();
+
+        expect(user.data()!['fullName'], tFullName);
+      },
+    );
+    test(
+      'should update user bio successfully '
+      'when no exception is thrown',
+      () async {
+        // arrange
+        const updatedBio = '_updated.bio';
+
+        // act
+        await dataSource.updateUser(
+          userData: updatedBio,
+          action: UpdateUserAction.bio,
+        );
+
+        final user = await cloudStoreClient
+            .collection('users')
+            .doc(
+              documentReference.id,
+            )
+            .get();
+
+        // assert
+        expect(user.data()!['bio'], updatedBio);
+
+        verifyNever(
+          () => mockUser.updateDisplayName(any()),
+        );
+        verifyNever(
+          () => mockUser.updatePhotoURL(any()),
+        );
+
+        verifyNever(
+          () => mockUser.updateEmail(any()),
+        );
+
+        verifyNever(
+          () => mockUser.updatePassword(any()),
+        );
       },
     );
   });
