@@ -1,5 +1,4 @@
 enum UpdateUserAction {
-  empty,
   displayName,
   email,
   password,
