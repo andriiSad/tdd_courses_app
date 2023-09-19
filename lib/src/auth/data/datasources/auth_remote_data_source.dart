@@ -70,7 +70,6 @@ class AuthRemoteDataSourceImpl implements IAuthRemoteDataSource {
         return LocalUserModel.fromMap(userData.data()!);
       }
       //upload the user, if he is not exist in cloudStore
-
       await _setUserData(user, email);
 
       userData = await _getUserData(user.uid);
@@ -163,7 +162,9 @@ class AuthRemoteDataSourceImpl implements IAuthRemoteDataSource {
           await _authClient.currentUser!.updateDisplayName(userData as String);
           await _updateUserData({'fullName': userData});
         case UpdateUserAction.profilePic:
-          final ref = _dbClient.ref().child('profile_pics/${_authClient.currentUser!.uid}');
+          final ref = _dbClient
+              .ref()
+              .child('profile_pics/${_authClient.currentUser!.uid}');
           await ref.putFile(userData as File);
           final url = await ref.getDownloadURL();
           await _authClient.currentUser!.updatePhotoURL(url);

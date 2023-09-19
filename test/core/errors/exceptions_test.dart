@@ -3,7 +3,10 @@ import 'package:tdd_courses_app/core/errors/exceptions.dart';
 
 void main() {
   group('ServerException', () {
-    const tException = ServerException(message: 'Test Message', statusCode: '500');
+    const tException = ServerException(
+      message: 'Test Message',
+      statusCode: '500',
+    );
 
     test('should extend Exception', () {
       expect(tException, isA<Exception>());
