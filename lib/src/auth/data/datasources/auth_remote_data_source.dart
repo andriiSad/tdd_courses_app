@@ -93,7 +93,16 @@ class AuthRemoteDataSourceImpl implements IAuthRemoteDataSource {
 
   @override
   Future<void> signOut() async {
-    // TODO: implement signOut
+    // try {
+    //   await _authClient.signOut();
+    // } catch (e) {
+    //   debugPrint('Error signing out: $e');
+    //   throw const ServerException(
+    //     message: 'Error signing out',
+    //     statusCode: '500',
+    //   );
+    // }
+    //TODO: implement signOut
     throw UnimplementedError();
   }
 
@@ -162,9 +171,7 @@ class AuthRemoteDataSourceImpl implements IAuthRemoteDataSource {
           await _authClient.currentUser!.updateDisplayName(userData as String);
           await _updateUserData({'fullName': userData});
         case UpdateUserAction.profilePic:
-          final ref = _dbClient
-              .ref()
-              .child('profile_pics/${_authClient.currentUser!.uid}');
+          final ref = _dbClient.ref().child('profile_pics/${_authClient.currentUser!.uid}');
           await ref.putFile(userData as File);
           final url = await ref.getDownloadURL();
           await _authClient.currentUser!.updatePhotoURL(url);
@@ -190,8 +197,6 @@ class AuthRemoteDataSourceImpl implements IAuthRemoteDataSource {
 
         case UpdateUserAction.bio:
           await _updateUserData({'bio': userData as String});
-        case UpdateUserAction.empty:
-        // TODO: Handle this case.
       }
     } on FirebaseException catch (e) {
       throw ServerException(
