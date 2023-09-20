@@ -11,7 +11,7 @@ import 'package:tdd_courses_app/src/on_boarding/presentation/widgets/on_boarding
 class OnBoardingScreen extends StatefulWidget {
   const OnBoardingScreen({super.key});
 
-  static const routeName = '/';
+  static const routeName = '/on_boarding';
 
   @override
   State<OnBoardingScreen> createState() => _OnBoardingScreenState();
@@ -44,11 +44,8 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
       body: GradientBackground(
         child: BlocConsumer<OnBoardingCubit, OnBoardingState>(
           listener: (context, state) {
-            // TODO(User Cached Handler): Push to appropriate screens
-            if (state is OnBoardingStatus && !state.isFirstTimer) {
-              // Navigator.pushReplacementNamed(context, '/home');
-            } else if (state is UserCached) {
-              // Navigator.pushReplacementNamed(context, '/sign_in');
+            if (state is UserCached) {
+              Navigator.pushReplacementNamed(context, '/');
             }
           },
           builder: (context, state) {

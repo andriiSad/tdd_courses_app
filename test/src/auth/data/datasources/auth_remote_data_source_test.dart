@@ -1,7 +1,9 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:firebase_storage_mocks/firebase_storage_mocks.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
@@ -38,10 +40,12 @@ class MockUserCredential extends Mock implements UserCredential {
   }
 }
 
+class MockAuthCredential extends Mock implements AuthCredential {}
+
 void main() {
   late FirebaseAuth authClient;
   late FirebaseFirestore cloudStoreClient;
-  late FirebaseStorage dbClient;
+  late MockFirebaseStorage dbClient;
 
   late IAuthRemoteDataSource dataSource;
   late DocumentReference<DataMap> documentReference;
@@ -358,11 +362,9 @@ void main() {
   });
 
   group('updateUser', () {
-    // setUp(
-    //   () async => {
-    //     when(() => authClient.currentUser).thenReturn(mockUser),
-    //   },
-    // );
+    setUp(() {
+      registerFallbackValue(MockAuthCredential());
+    });
     test(
       'should update user email successfully '
       'when no exception is thrown',
@@ -470,20 +472,134 @@ void main() {
         // assert
         expect(user.data()!['bio'], updatedBio);
 
-        verifyNever(
-          () => mockUser.updateDisplayName(any()),
+        verifyZeroInteractions(mockUser);
+      },
+    );
+    test(
+      'should update user password '
+      'when no [Exception] is thrown',
+      () async {
+        // arrange
+        when(() => mockUser.updatePassword(any()))
+            .thenAnswer((_) => Future.value());
+        when(() => mockUser.reauthenticateWithCredential(any()))
+            .thenAnswer((_) async => userCredential);
+        when(() => mockUser.email).thenReturn(tEmail);
+
+        // act
+        await dataSource.updateUser(
+          userData: jsonEncode({
+            'oldPassword': 'oldPassword',
+            'newPassword': tPassword,
+          }),
+          action: UpdateUserAction.password,
         );
+
+        // assert
+        verify(() => mockUser.updatePassword(tPassword)).called(1);
+
         verifyNever(
           () => mockUser.updatePhotoURL(any()),
         );
-
         verifyNever(
           () => mockUser.updateEmail(any()),
         );
+        verifyNever(
+          () => mockUser.updateDisplayName(any()),
+        );
+        final user = await cloudStoreClient
+            .collection('users')
+            .doc(
+              documentReference.id,
+            )
+            .get();
+
+        // assert
+        expect(user.data()!['password'], null);
+      },
+    );
+    test(
+      'should update profilePic '
+      'when no [Exception] is thrown',
+      () async {
+        // arrange
+        final newProfilePic = File('assets/images/sun.png');
+
+        when(() => mockUser.updatePhotoURL(any()))
+            .thenAnswer((invocation) => Future.value());
+
+        // act
+        await dataSource.updateUser(
+          userData: newProfilePic,
+          action: UpdateUserAction.profilePic,
+        );
+
+        // assert
+        verify(() => mockUser.updatePhotoURL(any())).called(1);
 
         verifyNever(
           () => mockUser.updatePassword(any()),
         );
+        verifyNever(
+          () => mockUser.updateEmail(any()),
+        );
+        verifyNever(
+          () => mockUser.updateDisplayName(any()),
+        );
+
+        expect(dbClient.storedFilesMap.isNotEmpty, isTrue);
+      },
+    );
+  });
+
+  group('signOut', () {
+    test(
+      'should complete successfully, '
+      'when no exception is thrown',
+      () async {
+        //arrange
+        when(() => authClient.signOut())
+            .thenAnswer((_) async => Future.value());
+
+        // act
+        final call = dataSource.signOut();
+
+        // assert
+        expect(
+          call,
+          completes,
+        );
+
+        verify(
+          () => authClient.signOut(),
+        ).called(1);
+
+        verifyNoMoreInteractions(authClient);
+      },
+    );
+    test(
+      'should throw [ServerException] '
+      'when authClient throws [FirebaseAuthException]',
+      () async {
+        //arrange
+        when(() => authClient.signOut()).thenThrow(tFirebaseAuthException);
+
+        //act
+        final call = dataSource.signOut;
+
+        // assert
+        expect(
+          call,
+          throwsA(
+            isA<ServerException>(),
+          ),
+        );
+
+        verify(
+          () => authClient.signOut(),
+        ).called(1);
+
+        verifyNoMoreInteractions(authClient);
       },
     );
   });
