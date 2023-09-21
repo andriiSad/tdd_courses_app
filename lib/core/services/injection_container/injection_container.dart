@@ -8,6 +8,7 @@ import 'package:tdd_courses_app/src/auth/data/repos/auth_repo_impl.dart';
 import 'package:tdd_courses_app/src/auth/domain/repos/auth_repo.dart';
 import 'package:tdd_courses_app/src/auth/domain/usecases/forgot_password.dart';
 import 'package:tdd_courses_app/src/auth/domain/usecases/sign_in.dart';
+import 'package:tdd_courses_app/src/auth/domain/usecases/sign_out.dart';
 import 'package:tdd_courses_app/src/auth/domain/usecases/sign_up.dart';
 import 'package:tdd_courses_app/src/auth/domain/usecases/update_user.dart';
 import 'package:tdd_courses_app/src/auth/presentation/bloc/auth_bloc.dart';

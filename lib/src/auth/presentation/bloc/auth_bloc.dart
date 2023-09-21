@@ -6,6 +6,7 @@ import 'package:tdd_courses_app/core/enums/update_user.dart';
 import 'package:tdd_courses_app/src/auth/domain/entities/user.dart';
 import 'package:tdd_courses_app/src/auth/domain/usecases/forgot_password.dart';
 import 'package:tdd_courses_app/src/auth/domain/usecases/sign_in.dart';
+import 'package:tdd_courses_app/src/auth/domain/usecases/sign_out.dart';
 import 'package:tdd_courses_app/src/auth/domain/usecases/sign_up.dart';
 import 'package:tdd_courses_app/src/auth/domain/usecases/update_user.dart';
 
@@ -18,10 +19,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     required SignUp signUp,
     required ForgotPassword forgotPassword,
     required UpdateUser updateUser,
+    required SignOut signOut,
   })  : _signIn = signIn,
         _signUp = signUp,
         _forgotPassword = forgotPassword,
         _updateUser = updateUser,
+        _signOut = signOut,
         super(const AuthInitial()) {
     on<AuthEvent>((event, emit) {
       emit(const AuthLoading());
@@ -30,12 +33,14 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<SignUpEvent>(_signUpHandler);
     on<ForgotPasswordEvent>(_forgotPasswordHandler);
     on<UpdateUserEvent>(_updateUserHandler);
+    on<SignOutEvent>(_signOutHandler);
   }
 
   final SignIn _signIn;
   final SignUp _signUp;
   final ForgotPassword _forgotPassword;
   final UpdateUser _updateUser;
+  final SignOut _signOut;
 
   Future<void> _signInHandler(
     SignInEvent event,
@@ -48,7 +53,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       ),
     );
     result.fold(
-      (failure) => emit(AuthError(failure.message)),
+      (failure) => emit(AuthError(failure.errorMessage)),
       (user) => emit(SignedIn(user)),
     );
   }
@@ -65,7 +70,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       ),
     );
     result.fold(
-      (failure) => emit(AuthError(failure.message)),
+      (failure) => emit(AuthError(failure.errorMessage)),
       (_) => emit(const SignedUp()),
     );
   }
@@ -98,6 +103,17 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     result.fold(
       (failure) => emit(AuthError(failure.message)),
       (_) => emit(const UserUpdated()),
+    );
+  }
+
+  Future<void> _signOutHandler(
+    SignOutEvent event,
+    Emitter<AuthState> emit,
+  ) async {
+    final result = await _signOut();
+    result.fold(
+      (failure) => emit(AuthError(failure.message)),
+      (_) => emit(const UserSignedOut()),
     );
   }
 }

@@ -36,6 +36,10 @@ class UserUpdated extends AuthState {
   const UserUpdated();
 }
 
+class UserSignedOut extends AuthState {
+  const UserSignedOut();
+}
+
 class AuthError extends AuthState {
   const AuthError(
     this.message,

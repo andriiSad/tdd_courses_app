@@ -22,6 +22,7 @@ Future<void> _initAuth() async {
         signUp: serviceLocator(),
         forgotPassword: serviceLocator(),
         updateUser: serviceLocator(),
+        signOut: serviceLocator(),
       ),
     )
 
@@ -30,6 +31,7 @@ Future<void> _initAuth() async {
     ..registerLazySingleton(() => SignUp(serviceLocator()))
     ..registerLazySingleton(() => ForgotPassword(serviceLocator()))
     ..registerLazySingleton(() => UpdateUser(serviceLocator()))
+    ..registerLazySingleton(() => SignOut(serviceLocator()))
 
     //Repositories
     //because we register interface but passing impl, we specify type

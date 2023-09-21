@@ -6,6 +6,7 @@ import 'package:tdd_courses_app/core/errors/failures.dart';
 import 'package:tdd_courses_app/src/auth/domain/entities/user.dart';
 import 'package:tdd_courses_app/src/auth/domain/usecases/forgot_password.dart';
 import 'package:tdd_courses_app/src/auth/domain/usecases/sign_in.dart';
+import 'package:tdd_courses_app/src/auth/domain/usecases/sign_out.dart';
 import 'package:tdd_courses_app/src/auth/domain/usecases/sign_up.dart';
 import 'package:tdd_courses_app/src/auth/domain/usecases/update_user.dart';
 import 'package:tdd_courses_app/src/auth/presentation/bloc/auth_bloc.dart';
@@ -18,11 +19,15 @@ class MockForgotPassword extends Mock implements ForgotPassword {}
 
 class MockUpdateUser extends Mock implements UpdateUser {}
 
+class MockSignOut extends Mock implements SignOut {}
+
 void main() {
   late SignIn signIn;
   late SignUp signUp;
   late ForgotPassword forgotPassword;
   late UpdateUser updateUser;
+  late SignOut signOut;
+
   late AuthBloc authBloc;
 
   const tSignInParams = SignInParams.empty();
@@ -40,12 +45,14 @@ void main() {
     signUp = MockSignUp();
     forgotPassword = MockForgotPassword();
     updateUser = MockUpdateUser();
+    signOut = MockSignOut();
 
     authBloc = AuthBloc(
       signIn: signIn,
       signUp: signUp,
       forgotPassword: forgotPassword,
       updateUser: updateUser,
+      signOut: signOut,
     );
   });
 
@@ -115,7 +122,7 @@ void main() {
       ),
       expect: () => [
         const AuthLoading(),
-        AuthError(tFailure.message),
+        AuthError(tFailure.errorMessage),
       ],
       verify: (_) {
         verify(
@@ -181,7 +188,7 @@ void main() {
       ),
       expect: () => [
         const AuthLoading(),
-        AuthError(tFailure.message),
+        AuthError(tFailure.errorMessage),
       ],
       verify: (_) {
         verify(
@@ -317,6 +324,56 @@ void main() {
         ).called(1);
 
         verifyNoMoreInteractions(updateUser);
+      },
+    );
+  });
+  group('SignOutEvent', () {
+    blocTest<AuthBloc, AuthState>(
+      'should emit [AuthLoading, AuthInitial] '
+      'when [SignOutEvent] is added',
+      build: () {
+        when(
+          () => signOut(),
+        ).thenAnswer((_) async => const Right(null));
+        return authBloc;
+      },
+      act: (bloc) => bloc.add(
+        SignOutEvent(),
+      ),
+      expect: () => [
+        const AuthLoading(),
+        const UserSignedOut(),
+      ],
+      verify: (_) {
+        verify(
+          () => signOut(),
+        ).called(1);
+
+        verifyNoMoreInteractions(signOut);
+      },
+    );
+    blocTest<AuthBloc, AuthState>(
+      'should emit [AuthLoading, AuthError] '
+      'when signOut returns a failure',
+      build: () {
+        when(
+          () => signOut(),
+        ).thenAnswer((_) async => const Left(tFailure));
+        return authBloc;
+      },
+      act: (bloc) => bloc.add(
+        SignOutEvent(),
+      ),
+      expect: () => [
+        const AuthLoading(),
+        AuthError(tFailure.message),
+      ],
+      verify: (_) {
+        verify(
+          () => signOut(),
+        ).called(1);
+
+        verifyNoMoreInteractions(signOut);
       },
     );
   });

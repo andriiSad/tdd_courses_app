@@ -9,24 +9,22 @@ import 'package:tdd_courses_app/core/res/fonts.dart';
 import 'package:tdd_courses_app/core/utils/core_utils.dart';
 import 'package:tdd_courses_app/src/auth/data/models/user_model.dart';
 import 'package:tdd_courses_app/src/auth/presentation/bloc/auth_bloc.dart';
-import 'package:tdd_courses_app/src/auth/presentation/views/sign_in_screen.dart';
-import 'package:tdd_courses_app/src/auth/presentation/widgets/sign_up_form.dart';
+import 'package:tdd_courses_app/src/auth/presentation/views/sign_up_screen.dart';
+import 'package:tdd_courses_app/src/auth/presentation/widgets/sign_in_form.dart';
 import 'package:tdd_courses_app/src/dashboard/presentation/views/dashboard_screen.dart';
 
-class SignUpScreen extends StatefulWidget {
-  const SignUpScreen({super.key});
+class SignInScreen extends StatefulWidget {
+  const SignInScreen({super.key});
 
-  static const routeName = '/sign_up';
+  static const routeName = '/sign_in';
 
   @override
-  State<SignUpScreen> createState() => _SignUpScreenState();
+  State<SignInScreen> createState() => _SignInScreenState();
 }
 
-class _SignUpScreenState extends State<SignUpScreen> {
+class _SignInScreenState extends State<SignInScreen> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
-  final confirmPasswordController = TextEditingController();
-  final fullNameController = TextEditingController();
 
   final formKey = GlobalKey<FormState>();
 
@@ -34,8 +32,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
   void dispose() {
     emailController.dispose();
     passwordController.dispose();
-    confirmPasswordController.dispose();
-    fullNameController.dispose();
 
     super.dispose();
   }
@@ -48,13 +44,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
         listener: (_, state) {
           if (state is AuthError) {
             CoreUtils.showSnackBar(context, state.message);
-          } else if (state is SignedUp) {
-            context.read<AuthBloc>().add(
-                  SignInEvent(
-                    email: emailController.text.trim(),
-                    password: passwordController.text.trim(),
-                  ),
-                );
           } else if (state is SignedIn) {
             context.userProvider.initUser(state.user as LocalUserModel);
             Navigator.of(context)
@@ -77,60 +66,63 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     ),
                   ),
                   const Gap(10),
-                  const Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      'Sign up for an account!',
-                      style: TextStyle(
-                        fontSize: 14,
-                      ),
-                    ),
-                  ),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: TextButton(
-                      onPressed: () {
-                        Navigator.of(context)
-                            .pushReplacementNamed(SignInScreen.routeName);
-                      },
-                      child: const Text(
-                        'Already have an account?',
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        'Sign in to your account',
                         style: TextStyle(
                           fontSize: 14,
                         ),
                       ),
-                    ),
+                      Baseline(
+                        baseline: 100,
+                        baselineType: TextBaseline.alphabetic,
+                        child: TextButton(
+                          onPressed: () {
+                            Navigator.of(context)
+                                .pushReplacementNamed(SignUpScreen.routeName);
+                          },
+                          child: const Text(
+                            'Register account',
+                            style: TextStyle(
+                              fontSize: 14,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                   const Gap(10),
-                  SignUpForm(
+                  SignInForm(
                     emailController: emailController,
                     passwordController: passwordController,
-                    confirmPasswordController: confirmPasswordController,
-                    fullNameController: fullNameController,
                     formKey: formKey,
+                  ),
+                  const Gap(20),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pushNamed('/forgot_password');
+                      },
+                      child: const Text('Forgot password?'),
+                    ),
                   ),
                   const Gap(30),
                   if (state is AuthLoading)
                     const Center(child: CircularProgressIndicator())
                   else
                     RoundedButton(
-                      label: 'Sign up',
+                      label: 'Sign in',
                       onPressed: () {
-                        debugPrint(
-                          FocusManager.instance.primaryFocus == null
-                              ? 'null'
-                              : FocusManager
-                                  .instance.primaryFocus?.canRequestFocus
-                                  .toString(),
-                        );
                         FocusManager.instance.primaryFocus?.unfocus();
                         FirebaseAuth.instance.currentUser?.reload();
                         if (formKey.currentState!.validate()) {
                           context.read<AuthBloc>().add(
-                                SignUpEvent(
+                                SignInEvent(
                                   email: emailController.text.trim(),
                                   password: passwordController.text.trim(),
-                                  fullName: fullNameController.text.trim(),
                                 ),
                               );
                         }
