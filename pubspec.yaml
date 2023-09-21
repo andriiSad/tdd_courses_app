@@ -7,94 +7,73 @@ environment:
   sdk: ">=3.1.1 <4.0.0"
 
 dependencies:
+  # Flutter core
   flutter:
     sdk: flutter
 
-  # UI icons for Cupertino style
+  # UI components
   cupertino_icons: ^1.0.2
+  iconly: ^1.0.1
+  font_awesome_flutter: ^10.5.0
 
-  # State management library
+  # State management
   bloc: ^8.1.2
   flutter_bloc: ^8.1.3
+  provider: ^6.0.5
+  get_it: ^7.6.4
 
-  # Simplifies equality comparisons
+  # Functional programming
   equatable: ^2.0.5
-
-  # Functional programming in Dart
   dartz: ^0.10.1
 
-  # File picker for selecting files
+  # File handling
   file_picker: ^5.5.0
-
-  # Icons library
-  iconly: ^1.0.1
-
-  # Image picker for selecting images
   image_picker: ^1.0.4
-
-  # Internationalization and localization
-  intl: ^0.18.1
-
-  # Lottie animations
-  lottie: ^2.6.0
-
-  # Opening files
   open_file: ^3.3.2
-
-  # File system access
   path_provider: ^2.1.1
 
-  # State management library
-  provider: ^6.0.5
+  # Internationalization
+  intl: ^0.18.1
 
-  # Persistent local storage
-  shared_preferences: ^2.2.1
-
-  # Page indicator widget
+  # Animation and visualization
+  lottie: ^2.6.0
   smooth_page_indicator: ^1.1.0
 
   # Swipe gestures
   swipe_to: ^1.0.2
 
-  # URL launcher for opening external links
+  # URL handling
   url_launcher: ^6.1.14
 
-  # Metadata for YouTube videos
+  # Metadata and video handling
   youtube_metadata: ^1.0.1
-
-  # Generating video thumbnails
   video_thumbnail: ^0.5.3
-
-  # Video player widget
   chewie: ^1.7.1
 
-  # FontAwesome icons
-  font_awesome_flutter: ^10.5.0
-  get_it: ^7.6.4
-  gap: ^3.0.1
+  # Firebase and authentication
   firebase_auth: ^4.9.0
   cloud_firestore: ^4.9.1
   firebase_storage: ^11.2.6
   firebase_core: ^2.15.1
   firebase_ui_auth: ^1.7.0
 
+  # Local storage
+  shared_preferences: ^2.2.1
+
 dev_dependencies:
-  # Flutter testing framework
+  # Flutter testing
   flutter_test:
     sdk: flutter
 
-  # Linting for Flutter projects
+  # Linting and analysis
   flutter_lints: ^2.0.0
+  very_good_analysis: ^5.1.0
 
-  # Testing utilities for BLoC
+  # Testing utilities
   bloc_test: ^9.1.4
-
-  # Mocking library for testing
   mocktail: ^1.0.0
 
-  # Static analysis tool for Dart & Flutter
-  very_good_analysis: ^5.1.0
-  
+  # Firebase mocking
   firebase_auth_mocks: ^0.12.0
   google_sign_in_mocks: ^0.3.0
   fake_cloud_firestore: ^2.4.1+1
