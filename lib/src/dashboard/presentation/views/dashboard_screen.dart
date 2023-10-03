@@ -34,7 +34,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
       builder: (_, snapshot) {
         if (snapshot.hasData) {
           context.userProvider.user = snapshot.data;
-          print(context.userProvider.user);
         }
         return Consumer<DashboardController>(
           builder: (_, controller, __) {
@@ -106,41 +105,5 @@ class _DashboardScreenState extends State<DashboardScreen> {
         );
       },
     );
-    // final user = context.userProvider.user;
-    // return Scaffold(
-    //   backgroundColor: Colours.whiteColour,
-    //   appBar: AppBar(
-    //     title: const Text('Dashboard'),
-    //     centerTitle: true,
-    //   ),
-    //   body: Padding(
-    //     padding: const EdgeInsets.symmetric(horizontal: 10),
-    //     child: Column(
-    //       crossAxisAlignment: CrossAxisAlignment.start,
-    //       children: [
-    //         const Gap(20),
-    //         Text(
-    //           'Hello ${user?.fullName}!',
-    //           style: const TextStyle(fontSize: 20),
-    //         ),
-    //         const Gap(20),
-    //         BlocListener<AuthBloc, AuthState>(
-    //           listener: (context, state) {
-    //             if (state is UserSignedOut) {
-    //               Navigator.of(context)
-    //                   .pushReplacementNamed(SignInScreen.routeName);
-    //             }
-    //           },
-    //           child: RoundedButton(
-    //             label: 'Log out',
-    //             onPressed: () {
-    //               context.read<AuthBloc>().add(SignOutEvent());
-    //             },
-    //           ),
-    //         ),
-    //       ],
-    //     ),
-    //   ),
-    // );
   }
 }

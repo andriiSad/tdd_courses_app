@@ -44,7 +44,7 @@ class LocalUser extends Equatable {
         following,
         followers,
         prifilePic,
-        bio
+        bio,
       ];
 
   @override
